@@ -18,13 +18,15 @@ verifyToken = (req, res, next) => {
         message: "Unauthorized!",
       });
     }
-    req.userId = decoded.id;
+    console.log(decoded);
+    req.id = decoded.id;
+    req.uuid = decoded.uuid;
     next();
   });
 };
 
 isAdmin = (req, res, next) => {
-  User.findByPk(req.userId).then((user) => {
+  User.findByPk(req.id).then((user) => {
     user.getRoles().then((roles) => {
       for (let i = 0; i < roles.length; i++) {
         if (roles[i].name === "admin") {
@@ -42,7 +44,7 @@ isAdmin = (req, res, next) => {
 };
 
 isMember = (req, res, next) => {
-  User.findByPk(req.userId).then((user) => {
+  User.findByPk(req.id).then((user) => {
     user.getRoles().then((roles) => {
       for (let i = 0; i < roles.length; i++) {
         if (roles[i].name === "member") {
@@ -75,10 +77,39 @@ isTrainer = (req, res, next) => {
   });
 };
 
+userDetails = (req, res, next) => {
+  User.findOne({ where: { uuid: req.uuid } }).then((user) => {
+    res.status(200).send({
+      message: user,
+    });
+    next();
+    return;
+  });
+};
+
+allDetails = (req, res, next) => {
+  User.findAll({
+    attributes: {
+      exclude: ["password", "id", "uuid", "createdAt", "updatedAt", "status"],
+    },
+    order: [["id", "DESC"]],
+  })
+    .then((users) => {
+      res.status(200).send({
+        ...users,
+      });
+    })
+    .catch((err) => {
+      res.status(403).send(err);
+    });
+};
+
 const authJwt = {
   verifyToken: verifyToken,
   isAdmin: isAdmin,
   isMember: isMember,
   isTrainer: isTrainer,
+  userDetails: userDetails,
+  allDetails: allDetails,
 };
 module.exports = authJwt;

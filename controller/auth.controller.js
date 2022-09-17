@@ -29,6 +29,7 @@ exports.signup = (req, res) => {
           },
         }).then((roles) => {
           user.setRoles(roles).then(() => {
+            user.role = roles;
             res.send({ message: "User was registered successfully!" });
           });
         });
@@ -68,10 +69,10 @@ exports.signin = (req, res) => {
       }
 
       var token = jwt.sign(
-        { uuid: user.uuid, email: user.email },
+        { id: user.id, uuid: user.uuid, email: user.email },
         config.secret,
         {
-          expiresIn: 86400 * 30, // 24 hours
+          expiresIn: 86400 * 30, // 24 hours * 30
         }
       );
 

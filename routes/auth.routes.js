@@ -10,15 +10,20 @@ module.exports = function (app) {
     next();
   });
 
+  // 2- Create a login API that should accept the following fields -
+
   app.post(
     "/api/auth/signup",
     [
       verifySignUp.checkDuplicateUsernameOrEmail,
       verifySignUp.checkRolesExisted,
       verifySignUp.checkPassword,
+      verifySignUp.validateEmail,
+      verifySignUp.validateMobile,
     ],
     controller.signup
   );
 
+  // 3- After successful login return the following response
   app.post("/api/auth/signin", controller.signin);
 };

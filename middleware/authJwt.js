@@ -78,13 +78,16 @@ isTrainer = (req, res, next) => {
 };
 
 userDetails = (req, res, next) => {
-  User.findOne({ where: { uuid: req.uuid } }).then((user) => {
-    res.status(200).send({
-      message: user,
+  User.findOne({ where: { uuid: req.uuid } })
+    .then((user) => {
+      res.status(200).send({
+        message: user,
+      });
+      return;
+    })
+    .catch((err) => {
+      res.status(403).send(err);
     });
-    next();
-    return;
-  });
 };
 
 allDetails = (req, res, next) => {

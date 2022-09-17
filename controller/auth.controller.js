@@ -72,6 +72,7 @@ exports.signin = (req, res) => {
         { id: user.id, uuid: user.uuid, email: user.email },
         config.secret,
         {
+          // 4- JWT token validity should be 30 days.
           expiresIn: 86400 * 30, // 24 hours * 30
         }
       );
@@ -81,11 +82,12 @@ exports.signin = (req, res) => {
         for (let i = 0; i < roles.length; i++) {
           authorities.push("ROLE_" + roles[i].name.toUpperCase());
         }
+
         res.status(200).send({
           id: user.id,
           username: user.username,
           email: user.email,
-          roles: authorities,
+          role: authorities,
           accessToken: token,
         });
       });

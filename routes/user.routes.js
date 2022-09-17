@@ -18,7 +18,9 @@ module.exports = function (app) {
     controller.memberBoard
   );
 
+  //5- Create an API to fetch user's details using JWT token i.e.
   app.get("/api/userDetails", [authJwt.verifyToken], authJwt.userDetails);
-};
 
-app.get("/api/test/all", authJwt.allDetails);
+  //6- Create an API that returns all users with the following filter
+  app.get("/api/test/all", authJwt.allDetails);
+};

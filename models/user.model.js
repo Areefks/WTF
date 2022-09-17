@@ -29,7 +29,7 @@ module.exports = (sequelize, Sequelize) => {
       type: Sequelize.STRING,
     },
     mobile: {
-      type: Sequelize.INTEGER,
+      type: Sequelize.INTEGER(10),
     },
     status: {
       type: Sequelize.STRING,

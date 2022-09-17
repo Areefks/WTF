@@ -55,7 +55,6 @@ checkPassword = (req, res, next) => {
     /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[#$@!%&*?])[A-Za-z\d#$@!%&*?]{8,30}$/;
 
   if (regex.exec(password) == null) {
-    console.log("hi");
     res.status(501).send({
       message: "password is not as expected",
     });
@@ -65,10 +64,42 @@ checkPassword = (req, res, next) => {
   next();
 };
 
+validateEmail = (req, res, next) => {
+  let email = req.body.email;
+
+  let validate = String(email)
+    .toLowerCase()
+    .match(
+      /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+    );
+  if (!validate) {
+    res.status(501).send({
+      message: "Email is not as expected",
+    });
+    return;
+  }
+  next();
+};
+
+validateMobile = (req, res, next) => {
+  let mobile = req.body.mobile;
+
+  let validate = String(mobile).length === 10;
+  if (!validate) {
+    res.status(501).send({
+      message: "Mobile is not as expected",
+    });
+    return;
+  }
+  next();
+};
+
 const verifySignUp = {
   checkDuplicateUsernameOrEmail: checkDuplicateUsernameOrEmail,
   checkRolesExisted: checkRolesExisted,
   checkPassword: checkPassword,
+  validateEmail: validateEmail,
+  validateMobile: validateMobile,
 };
 
 module.exports = verifySignUp;
